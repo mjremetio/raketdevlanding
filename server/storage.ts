@@ -171,6 +171,60 @@ export class DatabaseStorage implements IStorage {
     }
   }
   
+  // Site Settings operations
+  async getSiteSettings(): Promise<SiteSetting[]> {
+    return db.select().from(siteSettings);
+  }
+  
+  async getSiteSettingsByCategory(category: string): Promise<SiteSetting[]> {
+    return db
+      .select()
+      .from(siteSettings)
+      .where(eq(siteSettings.category, category));
+  }
+  
+  async getSiteSetting(key: string): Promise<SiteSetting | undefined> {
+    const [setting] = await db
+      .select()
+      .from(siteSettings)
+      .where(eq(siteSettings.settingKey, key));
+    return setting;
+  }
+  
+  async createSiteSetting(setting: InsertSiteSetting): Promise<SiteSetting> {
+    const [newSetting] = await db
+      .insert(siteSettings)
+      .values(setting)
+      .returning();
+    return newSetting;
+  }
+  
+  async updateSiteSetting(key: string, value: string, userId: number): Promise<SiteSetting | undefined> {
+    const [updatedSetting] = await db
+      .update(siteSettings)
+      .set({
+        settingValue: value,
+        updatedBy: userId,
+        updatedAt: new Date()
+      })
+      .where(eq(siteSettings.settingKey, key))
+      .returning();
+    return updatedSetting;
+  }
+  
+  async deleteSiteSetting(key: string): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(siteSettings)
+        .where(eq(siteSettings.settingKey, key));
+      
+      return result.rowCount ? result.rowCount > 0 : true;
+    } catch (error) {
+      console.error(`Error deleting setting ${key}:`, error);
+      return false;
+    }
+  }
+  
   // Hero Stats operations
   async getHeroStats(): Promise<HeroStat[]> {
     return db

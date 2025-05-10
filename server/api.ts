@@ -3,6 +3,119 @@ import { storage } from "./storage";
 import { isAuthenticated, isAdmin } from "./auth";
 
 export const registerApiRoutes = (app: express.Express) => {
+  // ===== SITE SETTINGS API =====
+  
+  // Get all site settings
+  app.get("/api/site-settings", async (req: Request, res: Response) => {
+    try {
+      const settings = await storage.getSiteSettings();
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching site settings:", error);
+      res.status(500).json({ message: "Error fetching site settings" });
+    }
+  });
+  
+  // Get site settings by category
+  app.get("/api/site-settings/category/:category", async (req: Request, res: Response) => {
+    try {
+      const settings = await storage.getSiteSettingsByCategory(req.params.category);
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching site settings by category:", error);
+      res.status(500).json({ message: "Error fetching site settings by category" });
+    }
+  });
+  
+  // Get specific site setting
+  app.get("/api/site-settings/:key", async (req: Request, res: Response) => {
+    try {
+      const setting = await storage.getSiteSetting(req.params.key);
+      
+      if (!setting) {
+        return res.status(404).json({ message: "Setting not found" });
+      }
+      
+      res.json(setting);
+    } catch (error) {
+      console.error("Error fetching site setting:", error);
+      res.status(500).json({ message: "Error fetching site setting" });
+    }
+  });
+  
+  // Create site setting (admin only)
+  app.post("/api/site-settings", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
+    const { settingKey, settingValue, category } = req.body;
+    const userId = req.session.user!.id;
+    
+    if (!settingKey || !settingValue || !category) {
+      return res.status(400).json({ message: "Setting key, value, and category are required" });
+    }
+    
+    // Check if setting with the same key already exists
+    try {
+      const existingSetting = await storage.getSiteSetting(settingKey);
+      
+      if (existingSetting) {
+        return res.status(409).json({ message: "A setting with this key already exists" });
+      }
+      
+      const newSetting = await storage.createSiteSetting({
+        settingKey,
+        settingValue,
+        category,
+        updatedBy: userId
+      });
+      
+      res.status(201).json(newSetting);
+    } catch (error) {
+      console.error("Error creating site setting:", error);
+      res.status(500).json({ message: "Error creating site setting" });
+    }
+  });
+  
+  // Update site setting (admin only)
+  app.put("/api/site-settings/:key", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
+    const { settingValue } = req.body;
+    const settingKey = req.params.key;
+    const userId = req.session.user!.id;
+    
+    if (!settingValue) {
+      return res.status(400).json({ message: "Setting value is required" });
+    }
+    
+    try {
+      const existingSetting = await storage.getSiteSetting(settingKey);
+      
+      if (!existingSetting) {
+        return res.status(404).json({ message: "Setting not found" });
+      }
+      
+      const updatedSetting = await storage.updateSiteSetting(settingKey, settingValue, userId);
+      
+      res.json(updatedSetting);
+    } catch (error) {
+      console.error("Error updating site setting:", error);
+      res.status(500).json({ message: "Error updating site setting" });
+    }
+  });
+  
+  // Delete site setting (admin only)
+  app.delete("/api/site-settings/:key", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
+    try {
+      const result = await storage.deleteSiteSetting(req.params.key);
+      
+      if (result) {
+        return res.status(200).json({ message: "Setting deleted successfully" });
+      } else {
+        return res.status(500).json({ message: "Failed to delete setting" });
+      }
+    } catch (error) {
+      console.error("Error deleting site setting:", error);
+      res.status(500).json({ message: "Error deleting site setting" });
+    }
+  });
+  
   // ===== SECTIONS API =====
   
   // Get all sections

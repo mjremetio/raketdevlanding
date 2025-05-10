@@ -9,8 +9,9 @@ import { ServiceEditor } from "@/components/admin/ServiceEditor";
 import { ProjectEditor } from "@/components/admin/ProjectEditor";
 import { TestimonialEditor } from "@/components/admin/TestimonialEditor";
 import { NewSectionEditor } from "@/components/admin/NewSectionEditor";
+import { AccessibilitySettings } from "@/components/admin/AccessibilitySettings";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Settings } from "lucide-react";
+import { Plus, Trash2, Settings, Palette } from "lucide-react";
 
 interface User {
   id: number;
