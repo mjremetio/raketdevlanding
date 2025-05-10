@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/not-found";
+import { SiteSettingsProvider } from "./components/SiteSettingsProvider";
 
 function App() {
   // Initialize theme once when app starts
@@ -33,6 +34,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <SiteSettingsProvider />
         <Switch>
           <Route path="/admin">
             <Admin />

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/useAuth";
+// Auth is not needed in this hook
 
 export interface SiteSetting {
   id: number;
@@ -106,10 +106,7 @@ export function useUpdateSiteSetting() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({ key, value }: { key: string; value: string }) => 
-      apiRequest(`/api/site-settings/${key}`, {
-        method: "PUT",
-        data: { value }
-      }),
+      apiRequest("PUT", `/api/site-settings/${key}`, { value }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/site-settings"] });
     }
@@ -128,9 +125,10 @@ export function useCreateSiteSetting() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: ({ key, value, category }: { key: string; value: string; category: string }) => 
-      apiRequest("/api/site-settings", {
-        method: "POST",
-        data: { settingKey: key, settingValue: value, category }
+      apiRequest("POST", "/api/site-settings", { 
+        settingKey: key, 
+        settingValue: value, 
+        category 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/site-settings"] });

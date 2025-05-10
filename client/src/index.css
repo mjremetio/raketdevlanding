@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Base shadcn/ui variables */
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --muted: 60 4.8% 95.9%;
@@ -24,6 +25,12 @@
     --destructive-foreground: 60 9.1% 97.8%;
     --ring: 20 14.3% 4.1%;
     --radius: 0.5rem;
+    
+    /* Custom accessibility variables */
+    --primary-color: #1e3a8a;
+    --accent-color: #0ea5e9;
+    --background-color: #ffffff;
+    --text-color: #1f2937;
   }
 
   .dark {
