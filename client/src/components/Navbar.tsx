@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Section } from "@shared/schema";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -12,17 +14,36 @@ const Navbar = ({ customLogo }: NavbarProps = {}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const scrollPosition = useScrollPosition();
   
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const navItems = [
+  // Fetch all sections to identify custom ones
+  const { data: sections = [] } = useQuery<Section[]>({
+    queryKey: ["/api/sections"],
+  });
+  
+  // Create combined navigation items (standard + custom)
+  const standardNavItems = [
     { href: "#about", label: "About" },
     { href: "#services", label: "Services" },
     { href: "#process", label: "Process" },
     { href: "#portfolio", label: "Portfolio" },
     { href: "#testimonials", label: "Testimonials" },
   ];
+  
+  // Get custom sections and convert to nav items
+  const customNavItems = sections
+    .filter(section => 
+      !['hero', 'about', 'services', 'process', 'portfolio', 'testimonials', 'contact'].includes(section.sectionId)
+    )
+    .map(section => ({
+      href: `#${section.sectionId}`,
+      label: section.title
+    }));
+    
+  // Combine standard and custom nav items
+  const navItems = [...standardNavItems, ...customNavItems];
+  
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   const closeMenu = () => {
     setIsMobileMenuOpen(false);

@@ -10,11 +10,10 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   // Fetch site settings
-  const { data: siteSettings } = useSiteSettings();
+  const { settingsArray, getSetting } = useSiteSettings();
   
-  // Find custom logo setting if it exists
-  const logoSetting = siteSettings?.find(setting => setting.settingKey === 'logo-url');
-  const customLogo = logoSetting?.settingValue || '';
+  // Get logo URL from settings
+  const customLogo = getSetting('logo-url');
   
   // Handle dark mode toggle directly
   useEffect(() => {
