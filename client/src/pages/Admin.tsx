@@ -10,8 +10,10 @@ import { ProjectEditor } from "@/components/admin/ProjectEditor";
 import { TestimonialEditor } from "@/components/admin/TestimonialEditor";
 import { NewSectionEditor } from "@/components/admin/NewSectionEditor";
 import { AccessibilitySettings } from "@/components/admin/AccessibilitySettings";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggleButton } from "@/components/admin/ThemeToggleButton";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Settings, Palette } from "lucide-react";
+import { Plus, Trash2, Settings, Palette, Moon, Sun } from "lucide-react";
 
 interface User {
   id: number;
@@ -697,7 +699,8 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
               Logged in as: {user.username}
             </p>
           </div>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 items-center">
+            <ThemeToggle />
             <Link href="/" className="px-4 py-2 border border-gray-300 rounded-md dark:border-gray-700 dark:text-white">
               View Website
             </Link>
