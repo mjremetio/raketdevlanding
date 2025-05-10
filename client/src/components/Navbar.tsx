@@ -4,7 +4,11 @@ import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const Navbar = () => {
+interface NavbarProps {
+  customLogo?: string;
+}
+
+const Navbar = ({ customLogo }: NavbarProps = {}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const scrollPosition = useScrollPosition();
   
@@ -72,9 +76,29 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <nav className="flex items-center justify-between relative z-10">
-          <a href="#" className="text-xl sm:text-2xl font-bold">
-            <span className="text-foreground dark:text-white">Raket</span>
-            <span className="text-accent">Dev</span>
+          <a href="#" className="text-xl sm:text-2xl font-bold flex items-center">
+            {customLogo ? (
+              <img 
+                src={customLogo} 
+                alt="RaketDev Logo" 
+                className="h-8 max-h-8 max-w-[120px] object-contain"
+                onError={(e) => {
+                  // If logo fails to load, fallback to text
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  // Show the text logo instead
+                  const parentElement = target.parentElement;
+                  if (parentElement) {
+                    parentElement.classList.add('logo-text-fallback');
+                  }
+                }}
+              />
+            ) : (
+              <>
+                <span className="text-foreground dark:text-white">Raket</span>
+                <span className="text-accent">Dev</span>
+              </>
+            )}
           </a>
           
           {/* Desktop Navigation */}

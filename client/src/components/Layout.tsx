@@ -2,12 +2,20 @@ import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import { Footer } from "@/sections/Footer";
 import { ThemeProvider } from "./ThemeProvider";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 const Layout = ({ children }: LayoutProps) => {
+  // Fetch site settings
+  const { data: siteSettings } = useSiteSettings();
+  
+  // Find custom logo setting if it exists
+  const logoSetting = siteSettings?.find(setting => setting.settingKey === 'logo-url');
+  const customLogo = logoSetting?.settingValue || '';
+  
   // Handle dark mode toggle directly
   useEffect(() => {
     // Check for user theme preference or use system default
@@ -39,7 +47,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <ThemeProvider>
-      <Navbar />
+      <Navbar customLogo={customLogo} />
       <main>{children}</main>
       <Footer />
       {/* Chat Support Button */}

@@ -34,6 +34,7 @@
   }
 
   .dark {
+    /* Base shadcn/ui variables */
     --background: 222 73% 11%; /* #0A192F */
     --foreground: 60 9.1% 97.8%; /* Near white text in dark mode */
     --muted: 240 3.7% 15.9%;
@@ -53,6 +54,12 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 60 9.1% 97.8%;
     --ring: 174 100% 69%;
+    
+    /* Custom accessibility variables for dark mode */
+    --primary-color: #0A192F; /* Dark navy blue */
+    --accent-color: #64FFDA;  /* Teal */
+    --background-color: #0A192F; /* Dark navy background */
+    --text-color: #e6f1ff; /* Light text for dark mode */
   }
 }
 
@@ -68,10 +75,67 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    color: var(--text-color);
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Font family accessibility classes */
+  .font-sans {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .font-serif {
+    font-family: 'Georgia', 'Times New Roman', serif;
+  }
+  
+  .font-mono {
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
+  
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .font-opensans {
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  /* Heading font classes */
+  .heading-font-sans h1, .heading-font-sans h2, .heading-font-sans h3, 
+  .heading-font-sans h4, .heading-font-sans h5, .heading-font-sans h6 {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .heading-font-serif h1, .heading-font-serif h2, .heading-font-serif h3, 
+  .heading-font-serif h4, .heading-font-serif h5, .heading-font-serif h6 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+  }
+  
+  .heading-font-mono h1, .heading-font-mono h2, .heading-font-mono h3, 
+  .heading-font-mono h4, .heading-font-mono h5, .heading-font-mono h6 {
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
+  
+  .heading-font-poppins h1, .heading-font-poppins h2, .heading-font-poppins h3, 
+  .heading-font-poppins h4, .heading-font-poppins h5, .heading-font-poppins h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .heading-font-roboto h1, .heading-font-roboto h2, .heading-font-roboto h3, 
+  .heading-font-roboto h4, .heading-font-roboto h5, .heading-font-roboto h6 {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .heading-font-opensans h1, .heading-font-opensans h2, .heading-font-opensans h3, 
+  .heading-font-opensans h4, .heading-font-opensans h5, .heading-font-opensans h6 {
+    font-family: 'Open Sans', sans-serif;
   }
 
   /* Improve form element contrast in dark mode */
