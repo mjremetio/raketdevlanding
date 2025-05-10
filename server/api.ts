@@ -16,6 +16,39 @@ export const registerApiRoutes = (app: express.Express) => {
     }
   });
   
+  // Create new section (admin only)
+  app.post("/api/sections", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
+    const { sectionId, title, subtitle, content } = req.body;
+    const userId = req.session.user!.id;
+    
+    if (!sectionId || !title) {
+      return res.status(400).json({ message: "Section ID and title are required" });
+    }
+    
+    // Check if section with the same ID already exists
+    try {
+      const existingSection = await storage.getSection(sectionId);
+      if (existingSection) {
+        return res.status(409).json({ message: "A section with this ID already exists" });
+      }
+      
+      const newSection = await storage.createSection(
+        {
+          sectionId,
+          title,
+          subtitle: subtitle || null,
+          content: content || {}
+        },
+        userId
+      );
+      
+      res.status(201).json(newSection);
+    } catch (error) {
+      console.error("Error creating section:", error);
+      res.status(500).json({ message: "Error creating section" });
+    }
+  });
+  
   // Get section by ID
   app.get("/api/sections/:sectionId", async (req: Request, res: Response) => {
     try {
@@ -52,6 +85,24 @@ export const registerApiRoutes = (app: express.Express) => {
     } catch (error) {
       console.error(`Error updating section ${req.params.sectionId}:`, error);
       res.status(500).json({ message: "Error updating section" });
+    }
+  });
+  
+  // Delete section (admin only)
+  app.delete("/api/sections/:sectionId", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
+    const sectionId = req.params.sectionId;
+    
+    try {
+      const success = await storage.deleteSection(sectionId);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Section not found" });
+      }
+      
+      res.json({ message: "Section deleted successfully" });
+    } catch (error) {
+      console.error(`Error deleting section ${sectionId}:`, error);
+      res.status(500).json({ message: "Error deleting section" });
     }
   });
   

@@ -32,6 +32,7 @@ export interface IStorage {
   getAllSections(): Promise<Section[]>;
   createSection(section: InsertSection, userId: number): Promise<Section>;
   updateSection(sectionId: string, updates: UpdateSection, userId: number): Promise<Section | undefined>;
+  deleteSection(sectionId: string): Promise<boolean>;
   
   // Component-specific operations
   getHeroStats(): Promise<HeroStat[]>;
@@ -137,6 +138,26 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updatedSection;
+  }
+  
+  async deleteSection(sectionId: string): Promise<boolean> {
+    // Don't allow deletion of core sections
+    const coreSections = ['hero', 'about', 'services', 'portfolio', 'testimonials', 'contact'];
+    if (coreSections.includes(sectionId)) {
+      return false;
+    }
+    
+    try {
+      const result = await db
+        .delete(sections)
+        .where(eq(sections.sectionId, sectionId));
+      
+      // For PostgreSQL it will return a rowCount, for other databases we can check differently
+      return result.rowCount ? result.rowCount > 0 : true;
+    } catch (error) {
+      console.error(`Error deleting section ${sectionId}:`, error);
+      return false;
+    }
   }
   
   // Hero Stats operations

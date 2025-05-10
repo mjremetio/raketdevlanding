@@ -147,6 +147,8 @@ const LoginForm = ({ onLogin }: { onLogin: () => void }) => {
 const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<string>("sections");
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
+  const [showNewSectionForm, setShowNewSectionForm] = useState<boolean>(false);
   const [newService, setNewService] = useState<Service | null>(null);
   const [newProject, setNewProject] = useState<Project | null>(null);
   const [newTestimonial, setNewTestimonial] = useState<Testimonial | null>(null);
