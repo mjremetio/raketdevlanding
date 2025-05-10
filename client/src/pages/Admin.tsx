@@ -199,6 +199,42 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+  
+  // Delete section mutation
+  const deleteSectionMutation = useMutation({
+    mutationFn: async (sectionId: string) => {
+      return await apiRequest("DELETE", `/api/sections/${sectionId}`);
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ["/api/sections"] });
+      
+      toast({
+        title: "Section Deleted",
+        description: "The section has been deleted successfully",
+      });
+      
+      // Reset active tab to sections if we were viewing the deleted section
+      if (activeTab === activeSectionId) {
+        setActiveTab("sections");
+        setActiveSectionId(null);
+      }
+    },
+    onError: (error: any) => {
+      console.error("Error deleting section:", error);
+      toast({
+        title: "Deletion Failed",
+        description: "There was an error deleting the section. It may be a core section that cannot be removed.",
+        variant: "destructive",
+      });
+    }
+  });
+  
+  const handleDeleteSection = (sectionId: string) => {
+    if (confirm(`Are you sure you want to delete this section? This action cannot be undone.`)) {
+      deleteSectionMutation.mutate(sectionId);
+    }
+  };
 
   // Create functions for adding new items
   const addNewService = () => {
@@ -257,6 +293,36 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
 
   // Render the appropriate content based on active tab
   const renderContent = () => {
+    // If active tab is a custom section ID
+    if (activeSectionId && !["sections", "heroStats", "services", "projects", "testimonials"].includes(activeTab)) {
+      const section = sections.find(s => s.sectionId === activeSectionId);
+      if (section) {
+        return (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold dark:text-white">
+                {section.title} <span className="text-sm text-gray-500 font-normal">Custom Section</span>
+              </h2>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="flex items-center gap-2"
+                onClick={() => handleDeleteSection(section.sectionId)}
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete Section
+              </Button>
+            </div>
+            
+            <div className="space-y-6">
+              <SectionEditor key={section.id} section={section} />
+            </div>
+          </div>
+        );
+      }
+    }
+    
+    // Standard tabs
     switch (activeTab) {
       case "sections":
         return (
@@ -640,57 +706,113 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
                 <h2 className="font-semibold dark:text-white">Dashboard Navigation</h2>
               </div>
               <div className="p-2">
-                <nav className="space-y-1">
-                  <button
-                    onClick={() => setActiveTab("sections")}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "sections"
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    Sections
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("heroStats")}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "heroStats"
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    Hero Stats
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("services")}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "services"
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    Services
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("projects")}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "projects"
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    Projects
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("testimonials")}
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "testimonials"
-                        ? "bg-accent text-accent-foreground"
-                        : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                    }`}
-                  >
-                    Testimonials
-                  </button>
+                <nav className="space-y-4">
+                  {/* Main Sections */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-2 px-4">
+                      General
+                    </h3>
+                    <div className="space-y-1">
+                      <button
+                        onClick={() => setActiveTab("sections")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                          activeTab === "sections"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        All Sections
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("heroStats")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                          activeTab === "heroStats"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        Hero Stats
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Content Sections */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-2 px-4">
+                      Content
+                    </h3>
+                    <div className="space-y-1">
+                      <button
+                        onClick={() => setActiveTab("services")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                          activeTab === "services"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        Services
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("projects")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                          activeTab === "projects"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        Projects
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("testimonials")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                          activeTab === "testimonials"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        Testimonials
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Custom Sections */}
+                  {sections.filter(section => !['hero', 'about', 'services', 'portfolio', 'testimonials', 'contact'].includes(section.sectionId)).length > 0 && (
+                    <div>
+                      <h3 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-2 px-4">
+                        Custom Sections
+                      </h3>
+                      <div className="space-y-1">
+                        {sections
+                          .filter(section => !['hero', 'about', 'services', 'portfolio', 'testimonials', 'contact'].includes(section.sectionId))
+                          .map(section => (
+                            <div key={section.sectionId} className="flex items-center">
+                              <button
+                                onClick={() => {
+                                  setActiveTab(section.sectionId);
+                                  setActiveSectionId(section.sectionId);
+                                }}
+                                className={`flex-1 text-left px-4 py-2 rounded-md transition-colors ${
+                                  activeTab === section.sectionId
+                                    ? "bg-accent text-accent-foreground"
+                                    : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                                }`}
+                              >
+                                {section.title}
+                              </button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="p-1 ml-1 text-gray-500 hover:text-red-500 dark:text-gray-400 hover:bg-transparent"
+                                onClick={() => handleDeleteSection(section.sectionId)}
+                                title="Delete Section"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
                 </nav>
               </div>
             </div>
