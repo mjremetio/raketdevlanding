@@ -671,6 +671,16 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
             </div>
           </div>
         );
+        
+      case "accessibility":
+        return (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold dark:text-white">Accessibility Settings</h2>
+            </div>
+            <AccessibilitySettings />
+          </div>
+        );
 
       default:
         return <div>Select a tab to manage content</div>;
