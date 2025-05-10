@@ -1,14 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import { Footer } from "@/sections/Footer";
+import { ThemeProvider } from "./ThemeProvider";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 const Layout = ({ children }: LayoutProps) => {
+  // Handle dark mode toggle directly
+  useEffect(() => {
+    // Check for user theme preference or use system default
+    const storedTheme = localStorage.getItem("theme") || "system";
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    // Set initial theme
+    if (storedTheme === "dark" || (storedTheme === "system" && prefersDark)) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    
+    // Listen for system theme changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      if (storedTheme === "system") {
+        if (mediaQuery.matches) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    };
+    
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <main>{children}</main>
       <Footer />
@@ -22,7 +52,7 @@ const Layout = ({ children }: LayoutProps) => {
           <i className="fas fa-comment-dots text-2xl"></i>
         </button>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 
