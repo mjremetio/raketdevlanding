@@ -28,24 +28,24 @@
 
   .dark {
     --background: 222 73% 11%; /* #0A192F */
-    --foreground: 0 0% 98%;
+    --foreground: 60 9.1% 97.8%; /* Near white text in dark mode */
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
     --popover: 222 73% 11%;
-    --popover-foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --card: 222 47% 11%;
+    --card-foreground: 60 9.1% 97.8%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --primary: 0 0% 100%; /* #FFFFFF */
     --primary-foreground: 222 73% 11%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 60 9.1% 97.8%;
     --accent: 174 100% 69%; /* #64FFDA */
     --accent-foreground: 222 73% 11%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --ring: 240 4.9% 83.9%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --ring: 174 100% 69%;
   }
 }
 
@@ -66,6 +66,28 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
   }
+
+  /* Improve form element contrast in dark mode */
+  .dark input, 
+  .dark select, 
+  .dark textarea {
+    @apply border-gray-700 bg-gray-800 text-white;
+  }
+
+  /* Make links more visible in dark mode */
+  .dark a:not([class*="bg-"]):not([class*="text-accent"]):not([class*="border"]) {
+    @apply text-gray-200 hover:text-accent;
+  }
+
+  /* Improve button contrast */
+  button:disabled {
+    @apply opacity-70 cursor-not-allowed;
+  }
+  
+  /* Focus states for accessibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-background;
+  }
 }
 
 @layer components {
@@ -76,5 +98,26 @@
   .animate-fade-in {
     @apply opacity-100 translate-y-0;
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+
+  /* Mobile menu animation */
+  @media (max-width: 767px) {
+    .mobile-menu {
+      transition: max-height 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    }
+  }
+  
+  /* Improved button hover effects */
+  .button-hover-effect {
+    @apply relative overflow-hidden;
+  }
+  
+  .button-hover-effect::after {
+    @apply absolute top-0 left-0 w-full h-full bg-white opacity-0 transition-opacity duration-300 content-[''];
+    mix-blend-mode: overlay;
+  }
+  
+  .button-hover-effect:hover::after {
+    @apply opacity-20;
   }
 }

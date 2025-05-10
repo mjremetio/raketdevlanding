@@ -44,10 +44,10 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-background">
-      <div className="container mx-auto px-6">
+    <section id="contact" className="py-16 md:py-20 bg-background dark:bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-foreground mb-12 text-center"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground dark:text-white mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
@@ -55,28 +55,29 @@ export function Contact() {
           Get In Touch
         </motion.h2>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto" ref={ref}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto" ref={ref}>
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
+            className="order-2 lg:order-1"
           >
             <motion.h3 
-              className="text-2xl font-semibold mb-6 text-foreground"
+              className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-foreground dark:text-white text-center lg:text-left"
               variants={itemVariants}
             >
               Let's Discuss Your Project
             </motion.h3>
 
             <motion.p 
-              className="mb-8 dark:text-gray-300"
+              className="mb-6 sm:mb-8 dark:text-gray-300 text-center lg:text-left"
               variants={itemVariants}
             >
               Ready to bring your digital vision to life? Contact us today to discuss how RaketDev can help create custom solutions tailored to your specific needs and goals.
             </motion.p>
             
             <motion.div 
-              className="space-y-4"
+              className="space-y-4 mb-8"
               variants={containerVariants}
             >
               {contactInfo.map((info, index) => (
@@ -85,11 +86,11 @@ export function Contact() {
                   className="flex items-start"
                   variants={itemVariants}
                 >
-                  <div className="text-accent text-xl mt-1 w-8">
+                  <div className="text-accent text-xl mt-1 w-8 flex-shrink-0">
                     <i className={info.icon}></i>
                   </div>
                   <div>
-                    <h4 className="font-medium text-foreground">{info.title}</h4>
+                    <h4 className="font-medium text-foreground dark:text-white">{info.title}</h4>
                     <p className="dark:text-gray-300">{info.detail}</p>
                   </div>
                 </motion.div>
@@ -97,7 +98,7 @@ export function Contact() {
             </motion.div>
             
             <motion.div 
-              className="mt-8"
+              className="mt-6 flex justify-center lg:justify-start"
               variants={itemVariants}
             >
               <SocialIcons />
@@ -108,6 +109,7 @@ export function Contact() {
             variants={containerVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
+            className="order-1 lg:order-2"
           >
             <ContactForm />
           </motion.div>
