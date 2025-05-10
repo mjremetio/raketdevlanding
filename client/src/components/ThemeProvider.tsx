@@ -11,10 +11,12 @@ type ThemeProviderProps = {
 type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  resolvedTheme: "dark" | "light"; // Always resolved to either dark or light
 };
 
 const initialState: ThemeProviderState = {
   theme: "system",
+  resolvedTheme: "light",
   setTheme: () => null,
 };
 
@@ -27,32 +29,65 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => {
+      try {
+        return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+      } catch {
+        return defaultTheme;
+      }
+    }
   );
+  
+  const [resolvedTheme, setResolvedTheme] = useState<"dark" | "light">("light");
 
+  // Media query for system theme preference
+  const prefersDarkMQ = window.matchMedia("(prefers-color-scheme: dark)");
+
+  // Function to resolve the actual theme
+  const resolveTheme = (themeSetting: Theme): "dark" | "light" => {
+    if (themeSetting === "system") {
+      return prefersDarkMQ.matches ? "dark" : "light";
+    }
+    return themeSetting;
+  };
+
+  // Update the resolved theme when system preference changes
+  useEffect(() => {
+    const handleChange = () => {
+      if (theme === "system") {
+        const newResolvedTheme = prefersDarkMQ.matches ? "dark" : "light";
+        setResolvedTheme(newResolvedTheme);
+        
+        const root = window.document.documentElement;
+        root.classList.remove("light", "dark");
+        root.classList.add(newResolvedTheme);
+      }
+    };
+
+    prefersDarkMQ.addEventListener("change", handleChange);
+    return () => prefersDarkMQ.removeEventListener("change", handleChange);
+  }, [theme, prefersDarkMQ]);
+
+  // Apply theme class to html element whenever theme changes
   useEffect(() => {
     const root = window.document.documentElement;
-
     root.classList.remove("light", "dark");
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
-    }
-
-    root.classList.add(theme);
+    
+    const newResolvedTheme = resolveTheme(theme);
+    setResolvedTheme(newResolvedTheme);
+    root.classList.add(newResolvedTheme);
   }, [theme]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    resolvedTheme,
+    setTheme: (newTheme: Theme) => {
+      try {
+        localStorage.setItem(storageKey, newTheme);
+      } catch {
+        // If localStorage is not available, just continue
+      }
+      setTheme(newTheme);
     },
   };
 
