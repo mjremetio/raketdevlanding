@@ -1,12 +1,13 @@
 export function PatternBackground() {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
       <svg
         className="w-full h-full opacity-20 dark:opacity-10"
         width="100%"
         height="100%"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        preserveAspectRatio="xMidYMid slice"
       >
         <defs>
           <pattern

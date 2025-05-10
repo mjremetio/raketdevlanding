@@ -65,73 +65,77 @@ const Navbar = () => {
     <header 
       className={cn(
         "fixed w-full z-50 transition-all duration-300",
-        scrollPosition > 50 ? "bg-background dark:bg-primary shadow-md py-2 sm:py-3" : "py-3 sm:py-4"
+        scrollPosition > 50 
+          ? "bg-background/95 backdrop-blur-sm dark:bg-primary/95 shadow-md py-2 sm:py-3" 
+          : "py-3 sm:py-4"
       )}
     >
-      <nav className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
-        <a href="#" className="text-xl sm:text-2xl font-bold">
-          <span className="text-foreground dark:text-white">Raket</span>
-          <span className="text-accent">Dev</span>
-        </a>
-        
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-6 lg:space-x-8 items-center">
-          {navItems.map((item) => (
-            <a 
-              key={item.href}
-              href={item.href} 
-              className="hover:text-accent transition-colors dark:text-gray-200 dark:hover:text-accent"
-            >
-              {item.label}
-            </a>
-          ))}
-          <a 
-            href="#contact" 
-            className="px-5 py-2 rounded-md bg-accent text-accent-foreground hover:bg-opacity-90 transition-all font-medium"
-          >
-            Contact Us
+      <div className="container mx-auto px-4 sm:px-6">
+        <nav className="flex items-center justify-between relative z-10">
+          <a href="#" className="text-xl sm:text-2xl font-bold">
+            <span className="text-foreground dark:text-white">Raket</span>
+            <span className="text-accent">Dev</span>
           </a>
-          <ThemeToggle />
-        </div>
-        
-        {/* Mobile Navigation Toggle */}
-        <div className="flex items-center md:hidden">
-          <ThemeToggle />
-          <button 
-            className="text-foreground dark:text-white ml-2"
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            <i className={`fas ${isMobileMenuOpen ? "fa-times" : "fa-bars"} text-2xl`}></i>
-          </button>
-        </div>
-      </nav>
-      
-      {/* Mobile Navigation Menu */}
-      <div 
-        className={`mobile-menu md:hidden bg-background dark:bg-primary shadow-lg absolute w-full transition-all duration-300 ${
-          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 invisible"
-        } overflow-hidden`}
-      >
-        <div className="container mx-auto px-4 sm:px-6 py-4 space-y-4">
-          {navItems.map((item) => (
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-6 lg:space-x-8 items-center">
+            {navItems.map((item) => (
+              <a 
+                key={item.href}
+                href={item.href} 
+                className="hover:text-accent transition-colors dark:text-gray-200 dark:hover:text-accent"
+              >
+                {item.label}
+              </a>
+            ))}
             <a 
-              key={item.href}
-              href={item.href} 
-              className="block hover:text-accent transition-colors dark:text-gray-200"
+              href="#contact" 
+              className="px-5 py-2 rounded-md bg-accent text-accent-foreground hover:bg-opacity-90 transition-all font-medium button-hover-effect shadow-sm"
+            >
+              Contact Us
+            </a>
+            <ThemeToggle />
+          </div>
+          
+          {/* Mobile Navigation Toggle */}
+          <div className="flex items-center md:hidden">
+            <ThemeToggle />
+            <button 
+              className="text-foreground dark:text-white ml-2 p-2"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <i className={`fas ${isMobileMenuOpen ? "fa-times" : "fa-bars"} text-xl`}></i>
+            </button>
+          </div>
+        </nav>
+        
+        {/* Mobile Navigation Menu */}
+        <div 
+          className={`mobile-menu md:hidden bg-background/95 backdrop-blur-sm dark:bg-primary/95 shadow-lg absolute left-0 right-0 z-40 transition-all duration-300 ${
+            isMobileMenuOpen ? "max-h-96 opacity-100 visible" : "max-h-0 opacity-0 invisible"
+          } overflow-hidden`}
+        >
+          <div className="px-4 sm:px-6 py-4 space-y-4">
+            {navItems.map((item) => (
+              <a 
+                key={item.href}
+                href={item.href} 
+                className="block hover:text-accent transition-colors dark:text-gray-200 py-2"
+                onClick={closeMenu}
+              >
+                {item.label}
+              </a>
+            ))}
+            <a 
+              href="#contact" 
+              className="block px-5 py-2 rounded-md bg-accent text-accent-foreground hover:bg-opacity-90 transition-all font-medium w-full text-center mt-4"
               onClick={closeMenu}
             >
-              {item.label}
+              Contact Us
             </a>
-          ))}
-          <a 
-            href="#contact" 
-            className="block px-5 py-2 rounded-md bg-accent text-accent-foreground hover:bg-opacity-90 transition-all font-medium w-full text-center"
-            onClick={closeMenu}
-          >
-            Contact Us
-          </a>
+          </div>
         </div>
       </div>
     </header>

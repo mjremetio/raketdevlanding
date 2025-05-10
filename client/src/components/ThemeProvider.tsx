@@ -28,10 +28,12 @@ export function ThemeProvider({
   storageKey = "theme",
   ...props
 }: ThemeProviderProps) {
+  // Initial theme from localStorage or default
   const [theme, setTheme] = useState<Theme>(
     () => {
       try {
-        return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+        const savedTheme = localStorage.getItem(storageKey);
+        return (savedTheme as Theme) || defaultTheme;
       } catch {
         return defaultTheme;
       }
@@ -68,6 +70,11 @@ export function ThemeProvider({
     return () => prefersDarkMQ.removeEventListener("change", handleChange);
   }, [theme, prefersDarkMQ]);
 
+  // Set initial resolved theme on component mount
+  useEffect(() => {
+    setResolvedTheme(resolveTheme(theme));
+  }, []);
+
   // Apply theme class to html element whenever theme changes
   useEffect(() => {
     const root = window.document.documentElement;
@@ -76,6 +83,9 @@ export function ThemeProvider({
     const newResolvedTheme = resolveTheme(theme);
     setResolvedTheme(newResolvedTheme);
     root.classList.add(newResolvedTheme);
+
+    // For debugging
+    console.log(`Theme changed to: ${theme}, resolved as: ${newResolvedTheme}`);
   }, [theme]);
 
   const value = {
