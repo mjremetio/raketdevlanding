@@ -5,6 +5,7 @@ import {
   projects,
   services,
   testimonials,
+  siteSettings,
   type User,
   type InsertUser,
   type Section,
@@ -13,7 +14,9 @@ import {
   type HeroStat,
   type Project,
   type Service,
-  type Testimonial
+  type Testimonial,
+  type SiteSetting,
+  type InsertSiteSetting
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -33,6 +36,14 @@ export interface IStorage {
   createSection(section: InsertSection, userId: number): Promise<Section>;
   updateSection(sectionId: string, updates: UpdateSection, userId: number): Promise<Section | undefined>;
   deleteSection(sectionId: string): Promise<boolean>;
+  
+  // Site Settings operations
+  getSiteSettings(): Promise<SiteSetting[]>;
+  getSiteSettingsByCategory(category: string): Promise<SiteSetting[]>;
+  getSiteSetting(key: string): Promise<SiteSetting | undefined>;
+  createSiteSetting(setting: InsertSiteSetting): Promise<SiteSetting>;
+  updateSiteSetting(key: string, value: string, userId: number): Promise<SiteSetting | undefined>;
+  deleteSiteSetting(key: string): Promise<boolean>;
   
   // Component-specific operations
   getHeroStats(): Promise<HeroStat[]>;

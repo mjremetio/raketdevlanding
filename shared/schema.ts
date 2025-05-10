@@ -92,6 +92,28 @@ export const testimonials = pgTable("testimonials", {
   order: integer("order").notNull(),
 });
 
+// Site Settings for Accessibility/Theme
+export const siteSettings = pgTable("site_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 50 }).notNull().unique(),
+  settingValue: text("setting_value").notNull(),
+  category: varchar("category", { length: 50 }).notNull(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedBy: integer("updated_by").references(() => users.id).notNull(),
+});
+
+export const insertSiteSettingSchema = createInsertSchema(siteSettings).pick({
+  settingKey: true,
+  settingValue: true,
+  category: true,
+  updatedBy: true,
+});
+
+export const updateSiteSettingSchema = createInsertSchema(siteSettings).pick({
+  settingValue: true,
+  updatedBy: true,
+});
+
 // Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -99,6 +121,10 @@ export type User = typeof users.$inferSelect;
 export type InsertSection = z.infer<typeof insertSectionSchema>;
 export type UpdateSection = z.infer<typeof updateSectionSchema>;
 export type Section = typeof sections.$inferSelect;
+
+export type InsertSiteSetting = z.infer<typeof insertSiteSettingSchema>;
+export type UpdateSiteSetting = z.infer<typeof updateSiteSettingSchema>;
+export type SiteSetting = typeof siteSettings.$inferSelect;
 
 export type HeroStat = typeof heroStats.$inferSelect;
 export type Project = typeof projects.$inferSelect;
