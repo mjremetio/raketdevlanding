@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --primary: 222 73% 11%;  /* #0A192F */
+    --primary-foreground: 0 0% 100%;  /* #FFFFFF */
+    --secondary: 0 0% 100%; /* #FFFFFF */
+    --secondary-foreground: 20 14.3% 4.1%;
+    --accent: 174 100% 69%; /* #64FFDA */
+    --accent-foreground: 222 73% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --ring: 20 14.3% 4.1%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 73% 11%; /* #0A192F */
+    --foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --popover: 222 73% 11%;
+    --popover-foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --primary: 0 0% 100%; /* #FFFFFF */
+    --primary-foreground: 222 73% 11%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 174 100% 69%; /* #64FFDA */
+    --accent-foreground: 222 73% 11%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer components {
+  .bg-pattern {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwQTE5MkYiIGQ9Ik0wIDBoNjB2NjBIMHoiIG9wYWNpdHk9Ii4wNSIvPjxwYXRoIHN0cm9rZT0iIzY0RkZEQSIgc3Ryb2tlLXdpZHRoPSIuNSIgZD0iTTIwIDMwbDIwLTIwTTYwIDMwTDMwIDYwTTAgMzBsMzAtMzBNMzAgNjBsMjAtMjBNMTAgMzBsMjAtMjBNNTAgMzBMMzAgMTBNMCAwaDYwdjYwSDB6Ii8+PC9nPjwvc3ZnPg==');
+  }
+  
+  .animate-fade-in {
+    @apply opacity-100 translate-y-0;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+}
