@@ -24,7 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { apiRequest } from '@/lib/queryClient';
-import { Pencil, Trash2, UserPlus } from 'lucide-react';
+import { Pencil, Trash2, UserPlus, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 type User = {
@@ -389,6 +389,16 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
+                      {onSelectUser && (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => onSelectUser(user.id)}
+                          title="Manage Permissions"
+                        >
+                          <ShieldCheck className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
