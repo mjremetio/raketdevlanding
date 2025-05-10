@@ -8,8 +8,9 @@ import { SectionEditor } from "@/components/admin/SectionEditor";
 import { ServiceEditor } from "@/components/admin/ServiceEditor";
 import { ProjectEditor } from "@/components/admin/ProjectEditor";
 import { TestimonialEditor } from "@/components/admin/TestimonialEditor";
+import { NewSectionEditor } from "@/components/admin/NewSectionEditor";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Trash2, Settings } from "lucide-react";
 
 interface User {
   id: number;
@@ -260,7 +261,27 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
       case "sections":
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4 dark:text-white">Website Sections</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold dark:text-white">Website Sections</h2>
+              <Button 
+                onClick={() => setShowNewSectionForm(true)}
+                className="bg-accent text-accent-foreground flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add New Section
+              </Button>
+            </div>
+
+            {showNewSectionForm && (
+              <div className="mb-8">
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md border border-gray-200 dark:border-gray-700">
+                  <NewSectionEditor 
+                    onClose={() => setShowNewSectionForm(false)} 
+                  />
+                </div>
+              </div>
+            )}
+            
             {sectionsLoading ? (
               <div className="flex justify-center p-8">
                 <Spinner className="h-8 w-8" />
@@ -268,7 +289,10 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
             ) : (
               <div className="space-y-6">
                 {sections.map((section) => (
-                  <SectionEditor key={section.id} section={section} />
+                  <SectionEditor 
+                    key={section.id} 
+                    section={section} 
+                  />
                 ))}
               </div>
             )}
