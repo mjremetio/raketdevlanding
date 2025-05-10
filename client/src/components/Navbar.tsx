@@ -66,7 +66,7 @@ const Navbar = () => {
       className={cn(
         "fixed w-full z-50 transition-all duration-300",
         scrollPosition > 50 
-          ? "bg-background/95 backdrop-blur-sm dark:bg-primary/95 shadow-md py-2 sm:py-3" 
+          ? "bg-background/95 backdrop-blur-sm dark:bg-gray-900/95 shadow-md py-2 sm:py-3" 
           : "py-3 sm:py-4"
       )}
     >
@@ -83,7 +83,7 @@ const Navbar = () => {
               <a 
                 key={item.href}
                 href={item.href} 
-                className="hover:text-accent transition-colors dark:text-gray-200 dark:hover:text-accent"
+                className="text-foreground hover:text-accent transition-colors dark:text-white dark:hover:text-accent"
               >
                 {item.label}
               </a>
@@ -113,7 +113,7 @@ const Navbar = () => {
         
         {/* Mobile Navigation Menu */}
         <div 
-          className={`mobile-menu md:hidden bg-background/95 backdrop-blur-sm dark:bg-primary/95 shadow-lg absolute left-0 right-0 z-40 transition-all duration-300 ${
+          className={`mobile-menu md:hidden bg-background/95 backdrop-blur-sm dark:bg-gray-900/95 shadow-lg absolute left-0 right-0 z-40 transition-all duration-300 ${
             isMobileMenuOpen ? "max-h-96 opacity-100 visible" : "max-h-0 opacity-0 invisible"
           } overflow-hidden`}
         >
@@ -122,7 +122,7 @@ const Navbar = () => {
               <a 
                 key={item.href}
                 href={item.href} 
-                className="block hover:text-accent transition-colors dark:text-gray-200 py-2"
+                className="block text-foreground hover:text-accent transition-colors dark:text-white dark:hover:text-accent py-2"
                 onClick={closeMenu}
               >
                 {item.label}
