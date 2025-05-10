@@ -295,7 +295,7 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
   // Render the appropriate content based on active tab
   const renderContent = () => {
     // If active tab is a custom section ID
-    if (activeSectionId && !["sections", "heroStats", "services", "projects", "testimonials"].includes(activeTab)) {
+    if (activeSectionId && !["sections", "heroStats", "services", "projects", "testimonials", "accessibility"].includes(activeTab)) {
       const section = sections.find(s => s.sectionId === activeSectionId);
       if (section) {
         return (
@@ -772,6 +772,26 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
                         }`}
                       >
                         Testimonials
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Settings */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-2 px-4">
+                      Settings
+                    </h3>
+                    <div className="space-y-1">
+                      <button
+                        onClick={() => setActiveTab("accessibility")}
+                        className={`w-full text-left px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${
+                          activeTab === "accessibility"
+                            ? "bg-accent text-accent-foreground"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        <Palette className="h-4 w-4" />
+                        Accessibility
                       </button>
                     </div>
                   </div>

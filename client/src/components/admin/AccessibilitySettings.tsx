@@ -423,7 +423,7 @@ export function AccessibilitySettings() {
                       />
                     ) : (
                       <div className="text-center text-muted-foreground flex flex-col items-center">
-                        <FileUp className="h-8 w-8 mb-2" />
+                        <UploadCloud className="h-8 w-8 mb-2" />
                         <span>No logo URL provided</span>
                       </div>
                     )}
