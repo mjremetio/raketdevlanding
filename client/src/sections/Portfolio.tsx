@@ -61,10 +61,10 @@ export function Portfolio() {
   };
 
   return (
-    <section id="portfolio" className="py-20 bg-background">
-      <div className="container mx-auto px-6">
+    <section id="portfolio" className="py-16 md:py-20 bg-background dark:bg-background">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-foreground mb-12 text-center"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground dark:text-white mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
@@ -73,7 +73,7 @@ export function Portfolio() {
         </motion.h2>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto"
           ref={ref}
           variants={containerVariants}
           initial="hidden"
@@ -85,14 +85,14 @@ export function Portfolio() {
         </motion.div>
         
         <motion.div 
-          className="text-center mt-12"
+          className="text-center mt-8 md:mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <a 
             href="#" 
-            className="px-6 py-3 bg-foreground dark:bg-accent text-background dark:text-accent-foreground font-semibold rounded-md hover:bg-opacity-90 transition-all inline-block"
+            className="px-6 py-3 bg-foreground dark:bg-accent text-background dark:text-accent-foreground font-semibold rounded-md hover:bg-opacity-90 transition-all inline-block shadow-md hover:shadow-lg"
           >
             View All Projects
           </a>

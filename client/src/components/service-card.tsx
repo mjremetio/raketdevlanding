@@ -28,24 +28,32 @@ export function ServiceCard({ service }: ServiceCardProps) {
       transition={{ duration: 0.5 }}
     >
       <div 
-        className="p-6 cursor-pointer"
+        className="p-5 sm:p-6 cursor-pointer"
         onClick={toggleExpand}
+        aria-expanded={isExpanded}
       >
-        <div className="flex items-start">
-          <div className="text-accent text-3xl mr-4">
+        <div className="flex flex-col sm:flex-row sm:items-start">
+          <div className="text-accent text-3xl mb-3 sm:mb-0 sm:mr-4 flex sm:block justify-center">
             <i className={service.icon}></i>
           </div>
-          <div>
-            <h3 className="text-xl font-semibold mb-2 dark:text-white">{service.title}</h3>
-            <p className="dark:text-gray-300">{service.description}</p>
+          <div className="flex-1">
+            <h3 className="text-xl font-semibold mb-2 dark:text-white text-center sm:text-left">{service.title}</h3>
+            <p className="dark:text-gray-300 text-center sm:text-left">{service.description}</p>
           </div>
-          <div className="ml-auto">
+          <div className="hidden sm:block ml-auto">
             <motion.i 
               className="fas fa-chevron-down text-accent"
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.3 }}
             ></motion.i>
           </div>
+        </div>
+        <div className="flex justify-center sm:hidden mt-3">
+          <motion.i 
+            className="fas fa-chevron-down text-accent"
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+          ></motion.i>
         </div>
       </div>
       
@@ -56,13 +64,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="px-6 pb-6 bg-white dark:bg-gray-800"
+            className="px-5 sm:px-6 pb-5 sm:pb-6 bg-white dark:bg-gray-800"
           >
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <ul className="space-y-2 dark:text-gray-300">
                 {service.details.map((detail, index) => (
-                  <li key={index}>
-                    <span className="text-accent mr-2">•</span> {detail}
+                  <li key={index} className="flex">
+                    <span className="text-accent mr-2 flex-shrink-0">•</span> 
+                    <span>{detail}</span>
                   </li>
                 ))}
               </ul>

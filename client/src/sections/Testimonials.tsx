@@ -37,10 +37,10 @@ export function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-20 bg-muted dark:bg-gray-900">
-      <div className="container mx-auto px-6">
+    <section id="testimonials" className="py-16 md:py-20 bg-muted dark:bg-gray-900">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-foreground mb-12 text-center"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground dark:text-white mb-8 md:mb-12 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
@@ -49,7 +49,7 @@ export function Testimonials() {
         </motion.h2>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto"
           ref={ref}
           variants={containerVariants}
           initial="hidden"
