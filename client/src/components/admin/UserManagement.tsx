@@ -23,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { apiRequest } from '@/lib/queryClient';
 import { Pencil, Trash2, UserPlus, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -331,85 +332,100 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
   );
 
   if (isLoading) {
-    return <div className="flex justify-center p-8">Loading users...</div>;
+    return (
+      <Card className="bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex justify-center items-center p-8">
+            <div className="flex flex-col items-center gap-2">
+              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>
+              <p className="text-gray-600 dark:text-gray-400">Loading users...</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">User Management</h2>
-        {renderCreateDialog()}
-      </div>
-      
-      {users.length === 0 ? (
-        <div className="p-8 text-center">
-          <p className="text-muted-foreground">No users found. Add a new user to get started.</p>
+    <Card className="bg-white dark:bg-gray-800 border dark:border-gray-700 shadow-sm">
+      <CardContent className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h2>
+          {renderCreateDialog()}
         </div>
-      ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Username</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user: User) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.username}</TableCell>
-                  <TableCell>
-                    {user.isAdmin ? (
-                      <Badge variant="default">Administrator</Badge>
-                    ) : (
-                      <Badge variant="outline">Standard User</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(user.updatedAt).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => openEditDialog(user)}
-                        title="Edit User"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="text-destructive"
-                        onClick={() => openDeleteDialog(user)}
-                        title="Delete User"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                      {onSelectUser && (
+        
+        {users.length === 0 ? (
+          <div className="p-8 text-center border rounded-md dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <p className="text-gray-500 dark:text-gray-400">No users found. Add a new user to get started.</p>
+          </div>
+        ) : (
+          <div className="rounded-md border dark:border-gray-700 overflow-hidden">
+            <Table>
+              <TableHeader className="bg-gray-50 dark:bg-gray-900">
+                <TableRow className="border-b dark:border-gray-700">
+                  <TableHead className="text-gray-700 dark:text-gray-300">Username</TableHead>
+                  <TableHead className="text-gray-700 dark:text-gray-300">Role</TableHead>
+                  <TableHead className="text-gray-700 dark:text-gray-300">Created</TableHead>
+                  <TableHead className="text-gray-700 dark:text-gray-300">Last Updated</TableHead>
+                  <TableHead className="text-gray-700 dark:text-gray-300">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((user: User) => (
+                  <TableRow key={user.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900">
+                    <TableCell className="font-medium text-gray-900 dark:text-white">{user.username}</TableCell>
+                    <TableCell>
+                      {user.isAdmin ? (
+                        <Badge variant="default" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">Administrator</Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-gray-700 dark:text-gray-300">Standard User</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-gray-700 dark:text-gray-300">{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell className="text-gray-700 dark:text-gray-300">{new Date(user.updatedAt).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
                         <Button
                           variant="outline"
                           size="icon"
-                          onClick={() => onSelectUser(user.id)}
-                          title="Manage Permissions"
+                          onClick={() => openEditDialog(user)}
+                          title="Edit User"
+                          className="border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
                         >
-                          <ShieldCheck className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-      
-      {renderEditDialog()}
-      {renderDeleteDialog()}
-    </div>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => openDeleteDialog(user)}
+                          title="Delete User"
+                          className="border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                        {onSelectUser && (
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => onSelectUser(user.id)}
+                            title="Manage Permissions"
+                            className="border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                          >
+                            <ShieldCheck className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+        
+        {renderEditDialog()}
+        {renderDeleteDialog()}
+      </CardContent>
+    </Card>
   );
 }
