@@ -6,8 +6,10 @@ import {
   services,
   testimonials,
   siteSettings,
+  userSectionPermissions,
   type User,
   type InsertUser,
+  type UpdateUser,
   type Section,
   type InsertSection,
   type UpdateSection,
@@ -16,7 +18,10 @@ import {
   type Service,
   type Testimonial,
   type SiteSetting,
-  type InsertSiteSetting
+  type InsertSiteSetting,
+  type UserSectionPermission,
+  type InsertUserSectionPermission,
+  UserRoles
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -26,9 +31,20 @@ import * as bcrypt from "bcryptjs";
 export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, data: Partial<UpdateUser>): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
   validateUserPassword(username: string, password: string): Promise<User | null>;
+  updateUserLastLogin(id: number): Promise<void>;
+  
+  // User permissions operations
+  getUserSectionPermissions(userId: number): Promise<UserSectionPermission[]>;
+  getSectionPermissions(sectionId: string): Promise<UserSectionPermission[]>;
+  addUserSectionPermission(permission: InsertUserSectionPermission): Promise<UserSectionPermission>;
+  removeUserSectionPermission(userId: number, sectionId: string): Promise<boolean>;
+  canUserEditSection(userId: number, sectionId: string): Promise<boolean>;
   
   // Sections operations
   getSection(sectionId: string): Promise<Section | undefined>;
