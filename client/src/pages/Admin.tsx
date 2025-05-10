@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/hooks/use-toast";
+import { SectionEditor } from "@/components/admin/SectionEditor";
+import { ServiceEditor } from "@/components/admin/ServiceEditor";
+import { ProjectEditor } from "@/components/admin/ProjectEditor";
+import { TestimonialEditor } from "@/components/admin/TestimonialEditor";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface User {
   id: number;
@@ -137,7 +145,12 @@ const LoginForm = ({ onLogin }: { onLogin: () => void }) => {
 
 // Admin Dashboard Component
 const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<string>("sections");
+  const [newService, setNewService] = useState<Service | null>(null);
+  const [newProject, setNewProject] = useState<Project | null>(null);
+  const [newTestimonial, setNewTestimonial] = useState<Testimonial | null>(null);
+  const [newHeroStat, setNewHeroStat] = useState<HeroStat | null>(null);
   
   // Fetch sections
   const { data: sections = [], isLoading: sectionsLoading } = useQuery<Section[]>({
@@ -184,6 +197,61 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
     logoutMutation.mutate();
   };
 
+  // Create functions for adding new items
+  const addNewService = () => {
+    const newServiceData: Service = {
+      id: 0, // Will be assigned by server
+      title: "New Service",
+      icon: "Code",
+      description: "Service description",
+      details: ["Detail 1", "Detail 2"],
+      order: services.length + 1
+    };
+    setNewService(newServiceData);
+    document.getElementById('new-service-modal')?.classList.remove('hidden');
+  };
+
+  const addNewProject = () => {
+    const newProjectData: Project = {
+      id: 0,
+      title: "New Project",
+      category: "Web Development",
+      image: "",
+      link: null,
+      description: null,
+      order: projects.length + 1
+    };
+    setNewProject(newProjectData);
+    document.getElementById('new-project-modal')?.classList.remove('hidden');
+  };
+
+  const addNewTestimonial = () => {
+    const newTestimonialData: Testimonial = {
+      id: 0,
+      name: "Client Name",
+      position: "Client Position",
+      content: "Client testimonial content",
+      order: testimonials.length + 1
+    };
+    setNewTestimonial(newTestimonialData);
+    document.getElementById('new-testimonial-modal')?.classList.remove('hidden');
+  };
+
+  const addNewHeroStat = () => {
+    const newHeroStatData: HeroStat = {
+      id: 0,
+      value: "0+",
+      label: "New Stat",
+      order: heroStats.length + 1
+    };
+    setNewHeroStat(newHeroStatData);
+    document.getElementById('new-hero-stat-modal')?.classList.remove('hidden');
+  };
+
+  const closeModal = (modalId: string) => {
+    document.getElementById(modalId)?.classList.add('hidden');
+  };
+
   // Render the appropriate content based on active tab
   const renderContent = () => {
     switch (activeTab) {
@@ -192,27 +260,13 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
           <div>
             <h2 className="text-xl font-semibold mb-4 dark:text-white">Website Sections</h2>
             {sectionsLoading ? (
-              <p className="dark:text-gray-300">Loading sections...</p>
+              <div className="flex justify-center p-8">
+                <Spinner className="h-8 w-8" />
+              </div>
             ) : (
-              <div className="grid gap-4">
-                {sections?.map((section: Section) => (
-                  <div key={section.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-md">
-                    <h3 className="text-lg font-medium mb-2 dark:text-white">{section.title}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      Section ID: {section.sectionId}
-                    </p>
-                    {section.subtitle && (
-                      <p className="dark:text-gray-300">Subtitle: {section.subtitle}</p>
-                    )}
-                    <div className="mt-2">
-                      <button
-                        className="px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-opacity-90"
-                        onClick={() => alert("Edit functionality will be implemented soon!")}
-                      >
-                        Edit Section
-                      </button>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {sections.map((section) => (
+                  <SectionEditor key={section.id} section={section} />
                 ))}
               </div>
             )}
@@ -223,42 +277,143 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
         return (
           <div>
             <h2 className="text-xl font-semibold mb-4 dark:text-white">Hero Statistics</h2>
+            <div className="flex justify-end mb-4">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+                onClick={addNewHeroStat}
+              >
+                <Plus className="h-4 w-4" />
+                Add New Stat
+              </Button>
+            </div>
+            
             {statsLoading ? (
-              <p className="dark:text-gray-300">Loading hero stats...</p>
+              <div className="flex justify-center p-8">
+                <Spinner className="h-8 w-8" />
+              </div>
             ) : (
-              <div className="grid gap-4">
-                {heroStats?.map((stat: HeroStat) => (
-                  <div key={stat.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-md">
+              <div className="space-y-4">
+                {heroStats.map((stat) => (
+                  <div key={stat.id} className="p-4 bg-white dark:bg-gray-800 rounded-md shadow">
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="text-lg font-medium dark:text-white">{stat.value}</h3>
                         <p className="dark:text-gray-300">{stat.label}</p>
                       </div>
-                      <div className="flex space-x-2">
-                        <button
-                          className="px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Edit functionality will be implemented soon!")}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Delete functionality will be implemented soon!")}
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="destructive" 
+                          onClick={() => {
+                            if (confirm(`Delete stat ${stat.value}?`)) {
+                              apiRequest("DELETE", `/api/hero-stats/${stat.id}`).then(() => {
+                                queryClient.invalidateQueries({ queryKey: ["/api/hero-stats"] });
+                                toast({
+                                  title: "Stat deleted",
+                                  description: "The stat has been deleted successfully"
+                                });
+                              });
+                            }
+                          }}
                         >
                           Delete
-                        </button>
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            // Show edit modal
+                            setNewHeroStat(stat);
+                            document.getElementById('new-hero-stat-modal')?.classList.remove('hidden');
+                          }}
+                        >
+                          Edit
+                        </Button>
                       </div>
                     </div>
                   </div>
                 ))}
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-opacity-90 w-full"
-                  onClick={() => alert("Add functionality will be implemented soon!")}
-                >
-                  Add New Stat
-                </button>
               </div>
             )}
+            
+            {/* Modal for adding/editing hero stat */}
+            <div id="new-hero-stat-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
+                <h3 className="text-xl font-semibold mb-4 dark:text-white">
+                  {newHeroStat && newHeroStat.id ? 'Edit Stat' : 'Add New Stat'}
+                </h3>
+                
+                {newHeroStat && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1 dark:text-white">Value</label>
+                      <input 
+                        type="text" 
+                        value={newHeroStat.value}
+                        onChange={(e) => setNewHeroStat({...newHeroStat, value: e.target.value})}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1 dark:text-white">Label</label>
+                      <input 
+                        type="text" 
+                        value={newHeroStat.label}
+                        onChange={(e) => setNewHeroStat({...newHeroStat, label: e.target.value})}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1 dark:text-white">Order</label>
+                      <input 
+                        type="number" 
+                        value={newHeroStat.order}
+                        onChange={(e) => setNewHeroStat({...newHeroStat, order: parseInt(e.target.value)})}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    </div>
+                    
+                    <div className="flex justify-end gap-2 mt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => closeModal('new-hero-stat-modal')}
+                      >
+                        Cancel
+                      </Button>
+                      
+                      <Button
+                        onClick={() => {
+                          const isNew = !newHeroStat.id;
+                          const method = isNew ? "POST" : "PUT";
+                          const url = isNew ? "/api/hero-stats" : `/api/hero-stats/${newHeroStat.id}`;
+                          
+                          apiRequest(method, url, {
+                            value: newHeroStat.value,
+                            label: newHeroStat.label,
+                            order: newHeroStat.order
+                          }).then(() => {
+                            queryClient.invalidateQueries({ queryKey: ["/api/hero-stats"] });
+                            toast({
+                              title: isNew ? "Stat created" : "Stat updated",
+                              description: `The stat has been ${isNew ? 'created' : 'updated'} successfully`
+                            });
+                            closeModal('new-hero-stat-modal');
+                          }).catch(err => {
+                            console.error("Error saving stat:", err);
+                            toast({
+                              title: "Error",
+                              description: "Failed to save the stat",
+                              variant: "destructive"
+                            });
+                          });
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         );
 
@@ -266,47 +421,53 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
         return (
           <div>
             <h2 className="text-xl font-semibold mb-4 dark:text-white">Services</h2>
+            <div className="flex justify-end mb-4">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+                onClick={addNewService}
+              >
+                <Plus className="h-4 w-4" />
+                Add New Service
+              </Button>
+            </div>
+            
             {servicesLoading ? (
-              <p className="dark:text-gray-300">Loading services...</p>
+              <div className="flex justify-center p-8">
+                <Spinner className="h-8 w-8" />
+              </div>
             ) : (
-              <div className="grid gap-4">
-                {services?.map((service: Service) => (
-                  <div key={service.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-md">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-medium dark:text-white">{service.title}</h3>
-                        <p className="dark:text-gray-300 mb-2">{service.description}</p>
-                        <div className="space-y-1">
-                          {service.details.map((detail, i) => (
-                            <p key={i} className="text-sm dark:text-gray-400">• {detail}</p>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          className="px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Edit functionality will be implemented soon!")}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Delete functionality will be implemented soon!")}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {services.map((service) => (
+                  <ServiceEditor 
+                    key={service.id} 
+                    service={service}
+                  />
                 ))}
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-opacity-90 w-full"
-                  onClick={() => alert("Add functionality will be implemented soon!")}
-                >
-                  Add New Service
-                </button>
               </div>
             )}
+            
+            {/* Modal for adding new service */}
+            <div id="new-service-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold dark:text-white">Add New Service</h3>
+                  <button 
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    onClick={() => closeModal('new-service-modal')}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                {newService && (
+                  <ServiceEditor 
+                    service={newService} 
+                    isNew={true} 
+                    onDelete={() => closeModal('new-service-modal')}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         );
 
@@ -314,47 +475,53 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
         return (
           <div>
             <h2 className="text-xl font-semibold mb-4 dark:text-white">Portfolio Projects</h2>
+            <div className="flex justify-end mb-4">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+                onClick={addNewProject}
+              >
+                <Plus className="h-4 w-4" />
+                Add New Project
+              </Button>
+            </div>
+            
             {projectsLoading ? (
-              <p className="dark:text-gray-300">Loading projects...</p>
+              <div className="flex justify-center p-8">
+                <Spinner className="h-8 w-8" />
+              </div>
             ) : (
-              <div className="grid gap-4">
-                {projects?.map((project: Project) => (
-                  <div key={project.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-md">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-medium dark:text-white">{project.title}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Category: {project.category}
-                        </p>
-                        {project.description && (
-                          <p className="dark:text-gray-300 mt-2">{project.description}</p>
-                        )}
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          className="px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Edit functionality will be implemented soon!")}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Delete functionality will be implemented soon!")}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {projects.map((project) => (
+                  <ProjectEditor
+                    key={project.id}
+                    project={project}
+                  />
                 ))}
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-opacity-90 w-full"
-                  onClick={() => alert("Add functionality will be implemented soon!")}
-                >
-                  Add New Project
-                </button>
               </div>
             )}
+            
+            {/* Modal for adding new project */}
+            <div id="new-project-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold dark:text-white">Add New Project</h3>
+                  <button 
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    onClick={() => closeModal('new-project-modal')}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                {newProject && (
+                  <ProjectEditor 
+                    project={newProject} 
+                    isNew={true} 
+                    onDelete={() => closeModal('new-project-modal')}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         );
 
@@ -362,45 +529,53 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
         return (
           <div>
             <h2 className="text-xl font-semibold mb-4 dark:text-white">Testimonials</h2>
+            <div className="flex justify-end mb-4">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2"
+                onClick={addNewTestimonial}
+              >
+                <Plus className="h-4 w-4" />
+                Add New Testimonial
+              </Button>
+            </div>
+            
             {testimonialsLoading ? (
-              <p className="dark:text-gray-300">Loading testimonials...</p>
+              <div className="flex justify-center p-8">
+                <Spinner className="h-8 w-8" />
+              </div>
             ) : (
-              <div className="grid gap-4">
-                {testimonials?.map((testimonial: Testimonial) => (
-                  <div key={testimonial.id} className="p-4 bg-gray-100 dark:bg-gray-700 rounded-md">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-lg font-medium dark:text-white">{testimonial.name}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {testimonial.position}
-                        </p>
-                        <p className="dark:text-gray-300 mt-2">"{testimonial.content}"</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          className="px-3 py-1 bg-accent text-accent-foreground rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Edit functionality will be implemented soon!")}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-opacity-90"
-                          onClick={() => alert("Delete functionality will be implemented soon!")}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-6">
+                {testimonials.map((testimonial) => (
+                  <TestimonialEditor
+                    key={testimonial.id}
+                    testimonial={testimonial}
+                  />
                 ))}
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-opacity-90 w-full"
-                  onClick={() => alert("Add functionality will be implemented soon!")}
-                >
-                  Add New Testimonial
-                </button>
               </div>
             )}
+            
+            {/* Modal for adding new testimonial */}
+            <div id="new-testimonial-modal" className="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold dark:text-white">Add New Testimonial</h3>
+                  <button 
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    onClick={() => closeModal('new-testimonial-modal')}
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                {newTestimonial && (
+                  <TestimonialEditor 
+                    testimonial={newTestimonial} 
+                    isNew={true} 
+                    onDelete={() => closeModal('new-testimonial-modal')}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         );
 
@@ -426,83 +601,77 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
             <button
               onClick={handleLogout}
               className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-opacity-90"
-              disabled={logoutMutation.isPending}
             >
-              {logoutMutation.isPending ? "Logging out..." : "Logout"}
+              Logout
             </button>
           </div>
         </header>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1">
-            <nav className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-              <ul className="space-y-2">
-                <li>
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-3">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+              <div className="p-4 bg-gray-100 dark:bg-gray-700">
+                <h2 className="font-semibold dark:text-white">Dashboard Navigation</h2>
+              </div>
+              <div className="p-2">
+                <nav className="space-y-1">
                   <button
                     onClick={() => setActiveTab("sections")}
-                    className={`w-full text-left px-4 py-2 rounded-md ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                       activeTab === "sections"
-                        ? "bg-accent text-accent-foreground font-medium"
+                        ? "bg-accent text-accent-foreground"
                         : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
                     }`}
                   >
                     Sections
                   </button>
-                </li>
-                <li>
                   <button
                     onClick={() => setActiveTab("heroStats")}
-                    className={`w-full text-left px-4 py-2 rounded-md ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                       activeTab === "heroStats"
-                        ? "bg-accent text-accent-foreground font-medium"
+                        ? "bg-accent text-accent-foreground"
                         : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
                     }`}
                   >
                     Hero Stats
                   </button>
-                </li>
-                <li>
                   <button
                     onClick={() => setActiveTab("services")}
-                    className={`w-full text-left px-4 py-2 rounded-md ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                       activeTab === "services"
-                        ? "bg-accent text-accent-foreground font-medium"
+                        ? "bg-accent text-accent-foreground"
                         : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
                     }`}
                   >
                     Services
                   </button>
-                </li>
-                <li>
                   <button
                     onClick={() => setActiveTab("projects")}
-                    className={`w-full text-left px-4 py-2 rounded-md ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                       activeTab === "projects"
-                        ? "bg-accent text-accent-foreground font-medium"
+                        ? "bg-accent text-accent-foreground"
                         : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
                     }`}
                   >
                     Projects
                   </button>
-                </li>
-                <li>
                   <button
                     onClick={() => setActiveTab("testimonials")}
-                    className={`w-full text-left px-4 py-2 rounded-md ${
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                       activeTab === "testimonials"
-                        ? "bg-accent text-accent-foreground font-medium"
+                        ? "bg-accent text-accent-foreground"
                         : "hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
                     }`}
                   >
                     Testimonials
                   </button>
-                </li>
-              </ul>
-            </nav>
+                </nav>
+              </div>
+            </div>
           </div>
           
-          <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+          <div className="col-span-12 md:col-span-9">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
               {renderContent()}
             </div>
           </div>
@@ -538,7 +707,7 @@ export default function Admin() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg dark:text-white">Loading...</p>
+        <Spinner className="h-8 w-8" />
       </div>
     );
   }
