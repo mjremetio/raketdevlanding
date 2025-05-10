@@ -140,31 +140,31 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
   const [activeTab, setActiveTab] = useState<string>("sections");
   
   // Fetch sections
-  const { data: sections, isLoading: sectionsLoading } = useQuery({
+  const { data: sections = [], isLoading: sectionsLoading } = useQuery<Section[]>({
     queryKey: ["/api/sections"],
     enabled: activeTab === "sections",
   });
 
   // Fetch hero stats
-  const { data: heroStats, isLoading: statsLoading } = useQuery({
+  const { data: heroStats = [], isLoading: statsLoading } = useQuery<HeroStat[]>({
     queryKey: ["/api/hero-stats"],
     enabled: activeTab === "heroStats",
   });
 
   // Fetch services
-  const { data: services, isLoading: servicesLoading } = useQuery({
+  const { data: services = [], isLoading: servicesLoading } = useQuery<Service[]>({
     queryKey: ["/api/services"],
     enabled: activeTab === "services",
   });
 
   // Fetch projects
-  const { data: projects, isLoading: projectsLoading } = useQuery({
+  const { data: projects = [], isLoading: projectsLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
     enabled: activeTab === "projects",
   });
 
   // Fetch testimonials
-  const { data: testimonials, isLoading: testimonialsLoading } = useQuery({
+  const { data: testimonials = [], isLoading: testimonialsLoading } = useQuery<Testimonial[]>({
     queryKey: ["/api/testimonials"],
     enabled: activeTab === "testimonials",
   });
