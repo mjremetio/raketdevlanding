@@ -3,7 +3,7 @@ import { PatternBackground } from "@/components/ui/pattern-background";
 
 export function Hero() {
   return (
-    <section id="hero" className="pt-24 md:pt-32 pb-16 md:pb-20 min-h-[90vh] md:min-h-screen flex items-center relative overflow-hidden bg-pattern dark:bg-opacity-5">
+    <section id="hero" className="pt-24 md:pt-32 pb-16 md:pb-20 min-h-[90vh] md:min-h-screen flex items-center relative overflow-hidden">
       <PatternBackground />
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
@@ -25,7 +25,7 @@ export function Hero() {
           </motion.div>
           
           <motion.h2 
-            className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 md:mb-6 dark:text-white"
+            className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 md:mb-6 text-foreground dark:text-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -34,7 +34,7 @@ export function Hero() {
           </motion.h2>
           
           <motion.p 
-            className="text-base sm:text-lg mb-8 md:mb-10 dark:text-gray-300 px-4 sm:px-0"
+            className="text-base sm:text-lg mb-8 md:mb-10 text-foreground/80 dark:text-gray-300 px-4 sm:px-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
@@ -49,7 +49,7 @@ export function Hero() {
           >
             <a 
               href="#services" 
-              className="px-6 sm:px-8 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-opacity-90 transition-all inline-block shadow-md hover:shadow-lg"
+              className="px-6 sm:px-8 py-3 bg-accent text-accent-foreground font-semibold rounded-md hover:bg-opacity-90 transition-all inline-block shadow-md hover:shadow-lg button-hover-effect"
             >
               Explore Our Services
             </a>
