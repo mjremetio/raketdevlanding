@@ -128,6 +128,104 @@ export class DatabaseStorage implements IStorage {
     return isPasswordValid ? user : null;
   }
   
+  async getAllUsers(): Promise<User[]> {
+    return db.select().from(users);
+  }
+  
+  async updateUser(id: number, data: Partial<UpdateUser>): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(users)
+        .where(eq(users.id, id));
+      
+      return !!result;
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return false;
+    }
+  }
+  
+  async updateUserLastLogin(id: number): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id));
+  }
+  
+  // User permissions operations
+  async getUserSectionPermissions(userId: number): Promise<UserSectionPermission[]> {
+    return db
+      .select()
+      .from(userSectionPermissions)
+      .where(eq(userSectionPermissions.userId, userId));
+  }
+  
+  async getSectionPermissions(sectionId: string): Promise<UserSectionPermission[]> {
+    return db
+      .select()
+      .from(userSectionPermissions)
+      .where(eq(userSectionPermissions.sectionId, sectionId));
+  }
+  
+  async addUserSectionPermission(permission: InsertUserSectionPermission): Promise<UserSectionPermission> {
+    const [newPermission] = await db
+      .insert(userSectionPermissions)
+      .values(permission)
+      .returning();
+    
+    return newPermission;
+  }
+  
+  async removeUserSectionPermission(userId: number, sectionId: string): Promise<boolean> {
+    try {
+      const result = await db
+        .delete(userSectionPermissions)
+        .where(
+          eq(userSectionPermissions.userId, userId) && 
+          eq(userSectionPermissions.sectionId, sectionId)
+        );
+      
+      return !!result;
+    } catch (error) {
+      console.error("Error removing permission:", error);
+      return false;
+    }
+  }
+  
+  async canUserEditSection(userId: number, sectionId: string): Promise<boolean> {
+    // First check if user is admin
+    const user = await this.getUser(userId);
+    if (user?.isAdmin) {
+      return true;
+    }
+    
+    // Then check section-specific permissions
+    const [permission] = await db
+      .select()
+      .from(userSectionPermissions)
+      .where(
+        eq(userSectionPermissions.userId, userId) && 
+        eq(userSectionPermissions.sectionId, sectionId)
+      );
+    
+    return !!permission?.canEdit;
+  }
+  
   // Sections operations
   async getSection(sectionId: string): Promise<Section | undefined> {
     const [section] = await db
