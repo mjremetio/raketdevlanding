@@ -227,26 +227,30 @@ export function PermissionManagement({ userId }: { userId: number }) {
                     Add Section Permission
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border dark:border-gray-700">
                   <DialogHeader>
-                    <DialogTitle>Add Section Permission</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-gray-900 dark:text-white">Add Section Permission</DialogTitle>
+                    <DialogDescription className="text-gray-600 dark:text-gray-400">
                       Give this user permission to edit a specific section of the website.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
-                      <label htmlFor="section">Choose Section</label>
+                      <label htmlFor="section" className="text-gray-700 dark:text-gray-300 font-medium">Choose Section</label>
                       <Select
                         value={selectedSection}
                         onValueChange={setSelectedSection}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                           <SelectValue placeholder="Select a section" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white dark:bg-gray-800 border dark:border-gray-700">
                           {availableSections.map((section: Section) => (
-                            <SelectItem key={section.sectionId} value={section.sectionId}>
+                            <SelectItem 
+                              key={section.sectionId} 
+                              value={section.sectionId}
+                              className="text-gray-900 dark:text-white focus:bg-gray-100 dark:focus:bg-gray-700"
+                            >
                               {section.title}
                             </SelectItem>
                           ))}
@@ -256,11 +260,14 @@ export function PermissionManagement({ userId }: { userId: number }) {
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
+                      <Button variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
+                        Cancel
+                      </Button>
                     </DialogClose>
                     <Button 
                       onClick={handleAddPermission}
                       disabled={addPermissionMutation.isPending || !selectedSection}
+                      className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
                     >
                       {addPermissionMutation.isPending ? 'Adding...' : 'Add Permission'}
                     </Button>
