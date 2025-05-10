@@ -399,7 +399,7 @@ export function AccessibilitySettings() {
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Enter a URL to an image file (.png, .jpg, .svg recommended)
+                    Enter a URL to an image file (.png, .jpg, .svg recommended). Leave empty to use the default "RaketDev" text logo.
                   </p>
                 </div>
                 
@@ -413,18 +413,40 @@ export function AccessibilitySettings() {
                         className="max-h-20 max-w-full"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = DEFAULT_SETTINGS["logo-url"];
+                          target.style.display = 'none';
+                          target.parentElement?.classList.add('logo-error');
+                          
                           toast({
                             title: "Logo Error",
                             description: "Could not load the logo image. Please check the URL.",
                             variant: "destructive",
                           });
+                          
+                          // Show text logo as fallback
+                          const container = target.parentElement;
+                          if (container && container.querySelector('.text-logo-fallback') === null) {
+                            const textLogo = document.createElement('div');
+                            textLogo.className = 'text-logo-fallback flex';
+                            
+                            const spanRaket = document.createElement('span');
+                            spanRaket.className = 'text-foreground dark:text-white text-2xl font-bold';
+                            spanRaket.textContent = 'Raket';
+                            
+                            const spanDev = document.createElement('span');
+                            spanDev.className = 'text-accent text-2xl font-bold';
+                            spanDev.textContent = 'Dev';
+                            
+                            textLogo.appendChild(spanRaket);
+                            textLogo.appendChild(spanDev);
+                            container.appendChild(textLogo);
+                          }
                         }}
                       />
                     ) : (
-                      <div className="text-center text-muted-foreground flex flex-col items-center">
-                        <UploadCloud className="h-8 w-8 mb-2" />
-                        <span>No logo URL provided</span>
+                      <div className="text-2xl font-bold flex items-center">
+                        <span className="text-foreground dark:text-white">Raket</span>
+                        <span className="text-accent">Dev</span>
+                        <div className="ml-4 text-sm text-muted-foreground">(Default text logo)</div>
                       </div>
                     )}
                   </div>

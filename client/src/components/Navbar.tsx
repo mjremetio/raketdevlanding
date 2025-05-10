@@ -110,7 +110,16 @@ const Navbar = ({ customLogo }: NavbarProps = {}) => {
                   // Show the text logo instead
                   const parentElement = target.parentElement;
                   if (parentElement) {
-                    parentElement.classList.add('logo-text-fallback');
+                    const spanRaket = document.createElement('span');
+                    spanRaket.className = 'text-foreground dark:text-white';
+                    spanRaket.textContent = 'Raket';
+                    
+                    const spanDev = document.createElement('span');
+                    spanDev.className = 'text-accent';
+                    spanDev.textContent = 'Dev';
+                    
+                    parentElement.appendChild(spanRaket);
+                    parentElement.appendChild(spanDev);
                   }
                 }}
               />
