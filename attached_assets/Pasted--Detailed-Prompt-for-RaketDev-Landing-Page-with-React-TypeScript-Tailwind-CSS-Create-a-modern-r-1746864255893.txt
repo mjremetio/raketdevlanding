@@ -1,0 +1,146 @@
+# Detailed Prompt for RaketDev Landing Page with React TypeScript & Tailwind CSS
+
+Create a modern, responsive landing page for RaketDev, a tech startup offering web app development, mobile app development, graphic design, and layout services. The company name "RaketDev" is derived from the Filipino word "raket" which conveys the idea of hustling and getting things done efficiently. The landing page should be built using React with TypeScript and styled using Tailwind CSS for a clean, maintainable codebase.
+
+## Design Principles
+- **Minimalist**: Clean design with ample white space
+- **Tech-driven**: Subtle tech elements like code snippets or geometric patterns
+- **Professional**: Convey reliability and expertise
+- **Responsive**: Must work perfectly on all device sizes (mobile, tablet, desktop)
+
+## Color Scheme
+- Primary: Deep navy blue (#0A192F)
+- Secondary: Clean white (#FFFFFF)
+- Accent: Vibrant teal (#64FFDA)
+- Text: Dark charcoal (#333333) and light gray (#F5F5F5)
+
+## Layout and Sections
+1. **Hero Section**
+   - Centered logo "RaketDev" with a subtle tech-inspired animation
+   - Tagline: "Building Tomorrow's Digital Solutions Today"
+   - Brief 1-2 sentence description: "We deliver cutting-edge web and mobile applications with pixel-perfect designs that drive business growth."
+   - CTA button: "Explore Our Services" (smooth scroll to services section)
+
+2. **About Section**
+   - Headline: "The RaketDev Difference"
+   - Brief company introduction explaining the meaning behind the name and your commitment to hustling efficiently for clients
+   - 3-4 key company values displayed with minimalist icons
+
+3. **Services Section**
+   - Display each service in a clean card layout:
+     - Web App Development
+     - Mobile App Development
+     - Graphic Design
+     - Layout & UI/UX Design
+   - Each card should include:
+     - Minimalist icon
+     - Service name
+     - Brief description (30-40 words)
+     - "Learn More" link that expands to show additional details
+
+4. **Process Section**
+   - Simple 4-step workflow visualization
+   - Steps: Discover → Design → Develop → Deploy
+   - Brief explanation for each step
+
+5. **Projects/Portfolio Preview**
+   - Grid layout showing 4-6 project thumbnails
+   - Hover effect revealing project name and type
+   - "View All Projects" button (can link to a future portfolio page)
+
+6. **Testimonials Section**
+   - Clean, card-based layout for 2-3 testimonials
+   - Include client name, position, and company
+   - Keep testimonials brief and focused on results
+
+7. **Contact Section**
+   - Simple contact form with fields for:
+     - Name
+     - Email
+     - Project type (dropdown with your services)
+     - Message
+   - "Send Message" button with appropriate hover effects
+   - Alternative contact methods (email, phone)
+
+8. **Footer**
+   - Logo (smaller version)
+   - Navigation links
+   - Social media icons
+   - Copyright information
+   - Privacy policy link
+
+## Technical Requirements
+- Build with React 18+ and TypeScript for type safety and maintainability
+- Implement Tailwind CSS for styling with a utility-first approach
+- Create modular, reusable components following best React practices
+- Structure the project with proper file organization (components, hooks, types, etc.)
+- Implement responsive design with Tailwind's responsive utility classes
+- Use React hooks for state management and component logic
+- Ensure fast loading times by implementing code splitting and optimizing images
+- Include subtle animations using Framer Motion or React Spring
+- Add smooth scrolling for navigation links
+- Ensure accessibility compliance (WCAG standards)
+- Set up proper TypeScript interfaces for all props and data structures
+
+## Interactive Elements
+- Implement subtle hover effects using Tailwind's hover: classes
+- Create an animated hamburger menu for mobile navigation using React state
+- Add gentle fade-in animations as sections enter viewport using Intersection Observer API 
+- Design service cards that expand with additional information on click using React state management
+- Add smooth transitions between component states using Tailwind's transition utilities
+- Implement scroll-triggered animations with react-intersection-observer
+- Add subtle parallax effects for visual interest
+
+## Typography
+- Primary Font: Poppins (headings)
+- Secondary Font: Inter (body text)
+- Font sizes should scale appropriately across devices
+
+## Images and Icons
+- Use minimalist tech-themed illustrations or icons
+- Consider using geometric patterns as background elements
+- All images should be optimized for web
+- Consider using SVG icons for clarity at all sizes
+
+## Special Touches
+- Add a subtle particle.js or tsParticles background in the hero section
+- Implement dark/light mode toggle using Tailwind's dark: variants and React context
+- Add a discreet chat support button in the bottom corner (with option to integrate real functionality later)
+- Create a fixed navigation bar that changes style on scroll using useEffect and scroll event listeners
+- Implement lazy loading for images with react-lazy-load-image-component
+- Add subtle micro-interactions for interactive elements
+- Consider adding keyboard navigation support for better accessibility
+- Include a themed preloader/splash screen while the page initially loads
+
+## Meta Information
+- Title: "RaketDev | Modern Tech Solutions"
+- Description: "RaketDev offers premium web development, mobile app, and design services to help businesses transform their digital presence."
+- Keywords: web development, mobile apps, graphic design, tech startup, digital solutions, RaketDev
+
+## Project Setup and Development
+- Initialize a new project with Vite or Next.js for React with TypeScript
+- Set up Tailwind CSS with proper configuration (tailwind.config.js)
+- Install necessary dependencies:
+  - react-router-dom for navigation (if using Vite)
+  - framer-motion or react-spring for animations
+  - react-intersection-observer for scroll animations
+  - react-hook-form for form handling
+  - react-icons for icon library
+  - heroicons for Tailwind-compatible icons
+- Create a responsive layout with Tailwind's container and grid/flex utilities
+- Implement proper SEO with React Helmet or Next.js Head component
+- Set up a proper folder structure:
+  ```
+  /src
+    /components
+      /layout
+      /sections
+      /ui
+    /hooks
+    /types
+    /utils
+    /assets
+  ```
+- Add ESLint and Prettier for code quality
+
+Please optimize the site for both aesthetics and performance, maintaining the minimalist tech-driven aesthetic throughout. Focus on creating reusable React components with proper TypeScript typing, and leverage Tailwind's utility classes for consistent, responsive styling across all devices.
