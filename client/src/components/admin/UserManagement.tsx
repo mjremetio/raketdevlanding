@@ -198,37 +198,42 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
   const renderCreateDialog = () => (
     <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-4 flex items-center" onClick={() => setFormData({ username: '', password: '', isAdmin: false })}>
+        <Button 
+          className="mb-4 flex items-center bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800" 
+          onClick={() => setFormData({ username: '', password: '', isAdmin: false })}
+        >
           <UserPlus className="mr-2 h-4 w-4" />
           Add User
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border dark:border-gray-700">
         <form onSubmit={handleCreateSubmit}>
           <DialogHeader>
-            <DialogTitle>Create New User</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-gray-900 dark:text-white">Create New User</DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400">
               Add a new user to the system. All fields are required.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username" className="text-gray-700 dark:text-gray-300">Username</Label>
               <Input
                 id="username"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 required
+                className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">Password</Label>
               <Input
                 id="password"
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
+                className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -238,12 +243,17 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
                 onCheckedChange={(checked) => 
                   setFormData({ ...formData, isAdmin: checked === true })
                 }
+                className="border-gray-300 dark:border-gray-600 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 dark:data-[state=checked]:bg-blue-700"
               />
-              <Label htmlFor="isAdmin">Administrator Access</Label>
+              <Label htmlFor="isAdmin" className="text-gray-700 dark:text-gray-300">Administrator Access</Label>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={createUserMutation.isPending}>
+            <Button 
+              type="submit" 
+              disabled={createUserMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
+            >
               {createUserMutation.isPending ? 'Creating...' : 'Create User'}
             </Button>
           </DialogFooter>
@@ -254,32 +264,34 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
 
   const renderEditDialog = () => (
     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-      <DialogContent>
+      <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border dark:border-gray-700">
         <form onSubmit={handleEditSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-gray-900 dark:text-white">Edit User</DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400">
               Update user information. Leave password blank to keep current password.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="edit-username">Username</Label>
+              <Label htmlFor="edit-username" className="text-gray-700 dark:text-gray-300">Username</Label>
               <Input
                 id="edit-username"
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 required
+                className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-password">Password</Label>
+              <Label htmlFor="edit-password" className="text-gray-700 dark:text-gray-300">Password</Label>
               <Input
                 id="edit-password"
                 type="password"
                 placeholder="Leave blank to keep current password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -289,12 +301,17 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
                 onCheckedChange={(checked) => 
                   setFormData({ ...formData, isAdmin: checked === true })
                 }
+                className="border-gray-300 dark:border-gray-600 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 dark:data-[state=checked]:bg-blue-700"
               />
-              <Label htmlFor="edit-isAdmin">Administrator Access</Label>
+              <Label htmlFor="edit-isAdmin" className="text-gray-700 dark:text-gray-300">Administrator Access</Label>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={updateUserMutation.isPending}>
+            <Button 
+              type="submit" 
+              disabled={updateUserMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800"
+            >
               {updateUserMutation.isPending ? 'Updating...' : 'Update User'}
             </Button>
           </DialogFooter>
@@ -305,24 +322,29 @@ export function UserManagement({ onSelectUser }: UserManagementProps = {}) {
 
   const renderDeleteDialog = () => (
     <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-      <DialogContent>
+      <DialogContent className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border dark:border-gray-700">
         <DialogHeader>
-          <DialogTitle>Delete User</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-gray-900 dark:text-white">Delete User</DialogTitle>
+          <DialogDescription className="text-gray-600 dark:text-gray-400">
             Are you sure you want to delete this user? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm font-medium">Username: {selectedUser?.username}</p>
+          <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+            Username: <span className="text-blue-600 dark:text-blue-400">{selectedUser?.username}</span>
+          </p>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className="border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
+              Cancel
+            </Button>
           </DialogClose>
           <Button 
             variant="destructive" 
             onClick={handleDelete}
             disabled={deleteUserMutation.isPending}
+            className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-700 dark:hover:bg-red-800"
           >
             {deleteUserMutation.isPending ? 'Deleting...' : 'Delete User'}
           </Button>
