@@ -2,15 +2,6 @@ import { pgTable, text, serial, integer, boolean, varchar, timestamp, jsonb, ind
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Role enum definition
-export const UserRoles = {
-  ADMIN: "admin",
-  EDITOR: "editor",
-  CONTRIBUTOR: "contributor",
-} as const;
-
-export type UserRole = typeof UserRoles[keyof typeof UserRoles];
-
 // Admin users table for CRM access
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -26,29 +17,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
   isAdmin: true,
 });
-
-export const updateUserSchema = createInsertSchema(users).omit({
-  id: true,
-  password: true,
-  createdAt: true,
-});
-
-// Define the userSectionPermissions table
-export const userSectionPermissions = pgTable("user_section_permissions", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id),
-  sectionId: varchar("section_id").notNull(),
-  canEdit: boolean("can_edit").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-export const insertUserSectionPermissionSchema = createInsertSchema(userSectionPermissions).pick({
-  userId: true,
-  sectionId: true,
-  canEdit: true,
-});
-
-export type InsertUserSectionPermission = z.infer<typeof insertUserSectionPermissionSchema>;
 
 // Session storage for authentication
 export const sessions = pgTable(
@@ -148,7 +116,6 @@ export const updateSiteSettingSchema = createInsertSchema(siteSettings).pick({
 
 // Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type UpdateUser = z.infer<typeof updateUserSchema>;
 export type User = typeof users.$inferSelect;
 
 export type InsertSection = z.infer<typeof insertSectionSchema>;
@@ -159,7 +126,6 @@ export type InsertSiteSetting = z.infer<typeof insertSiteSettingSchema>;
 export type UpdateSiteSetting = z.infer<typeof updateSiteSettingSchema>;
 export type SiteSetting = typeof siteSettings.$inferSelect;
 
-export type UserSectionPermission = typeof userSectionPermissions.$inferSelect;
 export type HeroStat = typeof heroStats.$inferSelect;
 export type Project = typeof projects.$inferSelect;
 export type Service = typeof services.$inferSelect;

@@ -11,7 +11,7 @@ import { TestimonialEditor } from "@/components/admin/TestimonialEditor";
 import { NewSectionEditor } from "@/components/admin/NewSectionEditor";
 import { AccessibilitySettings } from "@/components/admin/AccessibilitySettings";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Settings, Palette, Users } from "lucide-react";
+import { Plus, Trash2, Settings, Palette } from "lucide-react";
 
 interface User {
   id: number;
@@ -803,13 +803,6 @@ const Dashboard = ({ user, onLogout }: { user: User; onLogout: () => void }) => 
                         <Palette className="h-4 w-4" />
                         Accessibility
                       </button>
-                      <a
-                        href="/admin/users"
-                        className="w-full text-left px-4 py-2 rounded-md transition-colors flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
-                      >
-                        <Users className="h-4 w-4" />
-                        User Management
-                      </a>
                     </div>
                   </div>
                   

@@ -61,43 +61,4 @@ const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
 ));
 DialogTitle.displayName = "DialogTitle";
 
-const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-gray-500 dark:text-gray-400", className)}
-    {...props}
-  />
-));
-DialogDescription.displayName = "DialogDescription";
-
-const DialogFooter = ({ className, ...props }) => (
-  <div
-    className={cn("flex justify-end space-x-2 mt-4", className)}
-    {...props}
-  />
-);
-
-const DialogClose = React.forwardRef(({ className, children, ...props }, ref) => (
-  <button
-    ref={ref}
-    className={cn(
-      "px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </button>
-));
-DialogClose.displayName = "DialogClose";
-
-export { 
-  Dialog, 
-  DialogTrigger, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription, 
-  DialogFooter,
-  DialogClose 
-};
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle };

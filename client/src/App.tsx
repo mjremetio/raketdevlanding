@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-import UserAdmin from "./pages/UserAdmin";
 import NotFound from "./pages/not-found";
 import { SiteSettingsProvider } from "./components/SiteSettingsProvider";
 
@@ -39,9 +38,6 @@ function App() {
         <Switch>
           <Route path="/admin">
             <Admin />
-          </Route>
-          <Route path="/admin/users">
-            <UserAdmin />
           </Route>
           <Route path="/">
             <Layout>
