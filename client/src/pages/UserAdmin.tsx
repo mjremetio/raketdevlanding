@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserManagement } from '@/components/admin/UserManagement';
 import { PermissionManagement } from '@/components/admin/PermissionManagement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'wouter';
+import { useLocation } from 'wouter';
 
 export default function UserAdmin() {
   const { user, isLoading, isAuthenticated } = useAuth();
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [, setLocation] = useLocation();
+
+  // Redirect if not authenticated or not admin
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !user?.isAdmin)) {
+      setLocation('/');
+    }
+  }, [isLoading, isAuthenticated, user, setLocation]);
 
   // Wait for auth to load
   if (isLoading) {
     return <div className="flex justify-center p-8">Loading...</div>;
   }
 
-  // Redirect if not authenticated or not admin
+  // Don't render anything if not authenticated or not admin
   if (!isAuthenticated || !user?.isAdmin) {
-    return <Navigate to="/" />;
+    return null;
   }
 
   return (
